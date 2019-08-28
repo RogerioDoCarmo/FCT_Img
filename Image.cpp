@@ -216,7 +216,9 @@ class Image {
            float sum;
            int DIMM_DIMM = dim * dim;
 
-           int meio = dim / 2;
+           int dim_div;
+
+           int meio = (dim / 2);
 
            int i, j, x, y;
            int pos_x;
@@ -225,6 +227,7 @@ class Image {
            for (i = 0; i < getHeight(); i++) {
                 for (j = 0; j < getWidth(); j++) {
                     sum = 0;
+                    dim_div = 0;
                     for (x = 0; x < dim; x++) {
                         //pos_x = i + x;
                         pos_x = i - meio + x;
@@ -238,9 +241,11 @@ class Image {
                                 continue;
 
                             sum += getPixelAsFloat(pos_x, pos_y);
+                            dim_div++;
                         }// end y for
                     }// end x for
-                     newImage->setPixel(i,j, ((sum / DIMM_DIMM) + 0.5));
+                     newImage->setPixel(i,j, ((sum / dim_div) + 0.5));
+                     //newImage->setPixel(i,j, ((sum / DIMM_DIMM) + 0.5));
                 } // end j for
            }// end i for
             return newImage;
