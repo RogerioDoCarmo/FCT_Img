@@ -16,7 +16,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="lib/alocar/libLibrary_Mem_double.a" />
+					<Add library="lib/alocar/libLIB_FLOAT_CPP.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">

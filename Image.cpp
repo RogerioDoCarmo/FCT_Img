@@ -5,6 +5,8 @@
 #include <string.h>
 #include <float.h>
 
+#include "lib\alocar\Alocacao.hpp"
+
 #define MAX_PIXEL_VALUE 255
 #define MAGICAL_NUMBER_ASCII_PGM "P2"
 
@@ -24,13 +26,13 @@ class Image {
         }
 
         ~Image() {
-            liberar(getHeight(),mPixels);
+            deallocate(getHeight(),mPixels);
         }
 
         Image(int height, int width) {
-            mPixels = alocar(height,width);
+            mPixels = allocate(height, width);
             setHeight(height);
-            setWidth(width);
+            setWidth (width);
         }
 
         Image(char * filename) {
@@ -61,7 +63,6 @@ class Image {
             return ( mPixels[x][y] );
         }
 
-
         read_PGMfile(char * fileName) {
             FILE *arq;
 
@@ -80,7 +81,7 @@ class Image {
                 setWidth(larg);
                 setHeight(alt);
 
-                mPixels = alocar(getHeight(), getWidth());
+                mPixels = allocate(getHeight(), getWidth());
 
                 for(i = 0;i < getHeight(); i++) {
                     for(j = 0;j < getWidth(); j++) {
@@ -112,25 +113,6 @@ class Image {
                     printf("Erro no arquivo de saida\n");
                 }
        }
-
-       float ** alocar(int l, int c) {
-            int i;
-            float **pm;
-            pm = (float **) calloc(l, sizeof(float *));
-
-            for (i = 0; i < l; i++) {
-                pm[i] = (float *) calloc(c,sizeof(float));
-            }
-            return (pm);
-       }
-
-       void liberar(int l, float **pm) {
-            int i;
-            for (i = 0; i < l; i++) {
-                free(pm[i]);
-            }
-            free(pm);
-        }
 
        Image * laplaciano1(){
            Image * newImage = new Image(getHeight(),getWidth());
