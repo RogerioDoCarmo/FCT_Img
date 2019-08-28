@@ -3,7 +3,11 @@
 #include <string>
 #include <iostream>
 #include <string.h>
+#include <float.h>
 #include <string>
+
+#define MAX_PIXEL_VALUE 255
+#define MAGICAL_NUMBER_ASCII_PGM "P2"
 
 using namespace std;
 
@@ -11,10 +15,19 @@ class Image {
 
     private:
         int width, height;
-        double ** mPixels;
-        //string name;
-
+        int maxValue; int minValue;
+        float ** mPixels;
+        //float ** mPixels2;
     public:
+
+        Image() {
+        }
+
+        Image(int height, int width) {
+            mPixels = alocar(height,width);
+            setHeight(height);
+            setWidth(width);
+        }
 
         Image(char * filename) {
             read_PGMfile(filename);
@@ -34,42 +47,35 @@ class Image {
             return this->height;
         }
 
-        //void setName(string name) {
-          //  this.name = name;
-        //}
-        char nmagico[3];
-        int larg,alt,valmax;
+        void setPixel(int x, int y, int pixelValue) {
+            mPixels[x][y] = pixelValue;
+        }
+        int getPixelAsInt(int x, int y) {
+            return ( (int) mPixels[x][y] );
+        }
+        float getPixelAsFloat(int x, int y) {
+            return ( mPixels[x][y] );
+        }
 
         //double matriz;
 
         read_PGMfile(char * fileName) {
             FILE *arq;
 
-            cout << "Nome: " << fileName << " \n";
-
-//            char *nome = fileName.c_str(),  nmagico[3]; //[]
-
-
-            //char * nome = ;// = new char [fileName.length()+1];
-            //strcpy(nome, fileName.c_str());
-
+            //cout << "Nome: " << fileName << " \n";
+            char nmagico[3];
+            int larg,alt,valmax;
 
             int i,j,w,z,aux;//,matriz[256][256],
                     //matriz2[256][256];
                     //min=INT_MAX,max=INT_MIN;
 
+            maxValue = FLT_MAX; minValue = FLT_MIN;
+
             arq = fopen(fileName,"r");
             if (arq != NULL) {
             fscanf(arq,"%s",nmagico);
-
-            int result = fscanf(arq,"%i %i",&larg,&alt);
-
-            //double matriz [larg][alt];
-
-            //if (result == 0) { // Line comment #
-//                fscanf(arq,"%i %i",&larg,&alt);
-  //          }
-
+            fscanf(arq,"%i %i",&larg,&alt);
             fscanf(arq,"%i",&valmax);
 
             setWidth(larg);
@@ -85,86 +91,111 @@ class Image {
                     fscanf(arq,"%i",&aux);
                     mPixels[i][j] = aux;
 
-                    //cout << mPixels[i][j] << " ";
-                    //matriz[i][j] = aux;
-                    //matriz2[i][j] = aux;
-                // if(aux < min) {min=aux;}
-                // if(aux > max) {max=aux;}
+                 if(aux < minValue) {minValue=aux;}
+                 if(aux > maxValue) {minValue=aux;}
                 }
             }
             fclose(arq);
             }
        }
 
-       double ** alocar(int l, int c) {
+       float ** alocar(int l, int c) {
             int i;
-            double **pm;
-            pm = (double **) calloc(l, sizeof(double *));
+            float **pm;
+            pm = (float **) calloc(l, sizeof(float *));
 
             for (i = 0; i < l; i++) {
-                pm[i] = (double *) calloc(c,sizeof(double));
+                pm[i] = (float *) calloc(c,sizeof(float));
             }
             return (pm);
+       }
+
+       void liberar(int l, float **pm) {
+            int i;
+            for (i = 0; i < l; i++) {
+                free(pm[i]);
+            }
+            free(pm);
         }
 
-       filter_median() {
+       Image * laplaciano(){
+           Image * newImage = new Image(getHeight(),getWidth());
+
+            int i, j, z, w;
+            float aux;
+            int H[3][3];
+
+            //mPixels2 = alocar(getHeight(),getWidth());
+
+            H[0][0] =  0; H[0][1] = -1; H[0][2] =  0;
+            H[1][0] = -1; H[1][1] =  4; H[1][2] = -1;
+            H[2][0] =  0; H[2][1] = -1; H[2][2] =  0;
+
+            for(i=1; i < (getHeight() - 1); i++) {
+                for(j=1; j < (getWidth() -1); j++) {
+                    aux=0;
+                    for (w = -1; w <= 1; w++) {
+                        for (z = -1; z <= 1; z++) {
+                            aux += getPixelAsFloat(i+w, j+z) * H[w + 1][z + 1];
+                        }
+                    }
+
+                    newImage->setPixel(i, j, ((aux) + 0.5));
+                }
+            }
+        return newImage;
+    }
+
+
+    Image * filter_avg(int dim) {
+        Image * newImage = new Image(getHeight(),getWidth());
+
+           float sum;
+           int DIMM_DIMM = dim * dim;
+
+           int meio = dim / 2;
+
            int i, j, x, y;
-
-           double soma;
-           int DIMM = 15;
-           int DIMM_DIMM = DIMM * DIMM;
-
-           int meio = DIMM / 2;
-
            int pos_x;
            int pos_y;
 
-           cout << "Filter: " << getWidth() << " " << getHeight();
-
-          // double matriz[getWidth()][getHeight()];
-
            for (i = 0; i < getHeight(); i++) {
                 for (j = 0; j < getWidth(); j++) {
-                    soma = 0;
-                    for (x = 0; x < DIMM; x++) {
+                    sum = 0;
+                    for (x = 0; x < dim; x++) {
                         //pos_x = i + x;
                         pos_x = i - meio + x;
                         if (pos_x < 0 || pos_x >= getHeight())
                             continue;
 
-                        for (y = 0; y < DIMM; y++) {
+                        for (y = 0; y < dim; y++) {
                             //pos_y = j + y;
                             pos_y = j - meio + y;
                             if (pos_y < 0 || pos_y >= getWidth())
                                 continue;
 
-                            //soma += mPixels[i + x][j + y];
-                            soma += mPixels[pos_x][pos_y];
-                        }
-                        //cout << "Laço y\n";
-                    }
-                    //cout << "Atribuir ao pixel!\n";
-                    mPixels[i][j] = ( ((double)soma / DIMM_DIMM) + 0.5);
+                            sum += getPixelAsFloat(pos_x, pos_y);
+                        }// end y for
+                    }// end x for
+                     newImage->setPixel(i,j, ((sum / DIMM_DIMM) + 0.5));
                 } // end j for
-                //cout << "Fim de uma linha!\n";
            }// end i for
-
+            return newImage;
        }
 
        write_PGMfile(char * fileName) {
             FILE * arq = fopen(fileName,"w");
             if (arq != NULL) {
             // max = 255 - max;
-            fprintf(arq,"%s\n%i %i\n%i\n",nmagico,larg,alt,valmax);
+            fprintf(arq,"%s\n%i %i\n%i\n",MAGICAL_NUMBER_ASCII_PGM,getWidth(),getHeight(),MAX_PIXEL_VALUE);
             int i, j;
             for(i=0;i<getHeight();i++) {
                 for(j=0;j<getWidth();j++) {
-                    fprintf(arq,"%i ", (int)mPixels[i][j]);
+                    fprintf(arq,"%i ", getPixelAsInt(i,j));
                 }
                 fprintf(arq,"\n");
             }
             fclose(arq);
-            printf("Escrita finalizada\n");
             }
             else {
                 printf("Erro no arquivo de saida\n");
