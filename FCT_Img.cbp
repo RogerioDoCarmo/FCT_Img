@@ -5,7 +5,7 @@
 		<Option title="FCT_Img" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Model\;View\;Controller\;" />
+		<Option virtualFolders="Model\;View\;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/FCT_Img" prefix_auto="1" extension_auto="1" />
@@ -38,12 +38,6 @@
 		</Compiler>
 		<Unit filename="CMD_interface.cpp">
 			<Option virtualFolder="View/" />
-		</Unit>
-		<Unit filename="Controller.cpp">
-			<Option virtualFolder="Controller/" />
-		</Unit>
-		<Unit filename="Filter.cpp">
-			<Option virtualFolder="Model/" />
 		</Unit>
 		<Unit filename="Image.cpp">
 			<Option virtualFolder="Model/" />
