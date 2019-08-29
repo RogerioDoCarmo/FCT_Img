@@ -114,7 +114,7 @@ class Image {
                 }
        }
 
-       Image * laplaciano1(){
+       Image * Laplaciano_3x3(){
            Image * newImage = new Image(getHeight(),getWidth());
 
             int i, j, z, w;
@@ -126,7 +126,7 @@ class Image {
             H[2][0] =  0; H[2][1] = -1; H[2][2] =  0;
 
             for(i = 1; i < (getHeight() - 1); i++) {
-                for(j = 1; j < (getWidth() -1); j++) {
+                for(j = 1; j < (getWidth() - 1); j++) {
                     aux = 0;
                     for (w = -1; w <= 1; w++) {
                         for (z = -1; z <= 1; z++) {
@@ -134,33 +134,137 @@ class Image {
                         }
                     }
 
-                    newImage->setPixel(i, j, ((aux) + 0.5));
+                    newImage->setPixel(i, j, aux);
                 }
             }
         return newImage;
     }
 
-    Image * laplaciano2(){
+    Image * Laplaciano_5x5(){
            Image * newImage = new Image(getHeight(),getWidth());
 
             int i, j, z, w;
             float aux;
-            int H[3][3];
+            int H5[5][5];
 
-            H[0][0] = -1; H[0][1] = -1; H[0][2] = -1;
-            H[1][0] = -1; H[1][1] =  8; H[1][2] = -1;
-            H[2][0] = -1; H[2][1] = -1; H[2][2] = -1;
+            H5[0][0] = -1;
+            H5[0][1] = -1;
+            H5[0][2] = -1;
+            H5[0][3] = -1;
+            H5[0][4] = -1;
 
-            for(i = 1; i < (getHeight() - 1); i++) {
-                for(j = 1; j < (getWidth() -1); j++) {
-                    aux=0;
-                    for (w = -1; w <= 1; w++) {
-                        for (z = -1; z <= 1; z++) {
-                            aux += getPixelAsFloat(i+w, j+z) * H[w + 1][z + 1];
+            H5[1][0] = -1;
+            H5[1][1] = -1;
+            H5[1][2] = -1;
+            H5[1][3] = -1;
+            H5[1][4] = -1;
+
+            H5[2][0] = -1;
+            H5[2][1] = -1;
+            H5[2][2] = 24;
+            H5[2][3] = -1;
+            H5[2][4] = -1;
+
+            H5[3][0] = -1;
+            H5[3][1] = -1;
+            H5[3][2] = -1;
+            H5[3][3] = -1;
+            H5[3][4] = -1;
+
+            H5[4][0] = -1;
+            H5[4][1] = -1;
+            H5[4][2] = -1;
+            H5[4][3] = -1;
+            H5[4][4] = -1;
+
+            for(i = 2; i < (getHeight() - 2); i++) {
+                for(j = 2; j < (getWidth() - 2); j++) {
+                    aux = 0;
+                    for (w = -2; w <= 2; w++) {
+                        for (z = -2; z <= 2; z++) {
+                            aux += getPixelAsFloat(i+w, j+z) * H5[w + 2][z + 2];
                         }
                     }
 
-                    newImage->setPixel(i, j, ((aux) + 0.5));
+                    newImage->setPixel(i, j, aux);
+                }
+            }
+        return newImage;
+    }
+
+    Image * Laplaciano_7x7(){
+           Image * newImage = new Image(getHeight(),getWidth());
+
+            int i, j, z, w;
+            float aux;
+            int H7[7][7];
+
+            H7[0][0] = -1;
+            H7[0][1] = -1;
+            H7[0][2] = -1;
+            H7[0][3] = -1;
+            H7[0][4] = -1;
+            H7[0][5] = -1;
+            H7[0][6] = -1;
+
+            H7[1][0] = -1;
+            H7[1][1] = -1;
+            H7[1][2] = -1;
+            H7[1][3] = -1;
+            H7[1][4] = -1;
+            H7[1][5] = -1;
+            H7[1][6] = -1;
+
+            H7[2][0] = -1;
+            H7[2][1] = -1;
+            H7[2][2] = -1;
+            H7[2][3] = -1;
+            H7[2][4] = -1;
+            H7[2][5] = -1;
+            H7[2][6] = -1;
+
+            H7[3][0] = -1;
+            H7[3][1] = -1;
+            H7[3][2] = -1;
+            H7[3][3] = 48;
+            H7[3][4] = -1;
+            H7[3][5] = -1;
+            H7[3][6] = -1;
+
+            H7[4][0] = -1;
+            H7[4][1] = -1;
+            H7[4][2] = -1;
+            H7[4][3] = -1;
+            H7[4][4] = -1;
+            H7[4][5] = -1;
+            H7[4][6] = -1;
+
+            H7[5][0] = -1;
+            H7[5][1] = -1;
+            H7[5][2] = -1;
+            H7[5][3] = -1;
+            H7[5][4] = -1;
+            H7[5][5] = -1;
+            H7[5][6] = -1;
+
+            H7[6][0] = -1;
+            H7[6][1] = -1;
+            H7[6][2] = -1;
+            H7[6][3] = -1;
+            H7[6][4] = -1;
+            H7[6][5] = -1;
+            H7[6][6] = -1;
+
+            for(i = 3; i < (getHeight() - 3); i++) {
+                for(j = 3; j < (getWidth() - 3); j++) {
+                    aux = 0;
+                    for (w = -3; w <= 3; w++) {
+                        for (z = -3; z <= 3; z++) {
+                            aux += getPixelAsFloat(i+w, j+z) * H7[w + 3][z + 3];
+                        }
+                    }
+
+                    newImage->setPixel(i, j, aux);
                 }
             }
         return newImage;
