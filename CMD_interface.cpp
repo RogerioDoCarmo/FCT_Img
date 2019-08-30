@@ -16,8 +16,8 @@ int main() {
     HEADER_LINE_SINGLE;
 
     /* Caminho para as imagens originais */
-    char * fileName = "processamentos/lenna.pgm";
-    //char * fileName = "processamentos/marcie.pgm";
+    //char * fileName = "processamentos/lenna.pgm";
+    char * fileName = "processamentos/marcie.pgm";
     //char * fileName = "processamentos/fate_UBW.pgm";
     //char * fileName = "processamentos/ori.pgm";
 

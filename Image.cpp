@@ -39,14 +39,14 @@ class Image {
             read_PGMfile(filename);
         }
 
-        void setWidth(int w) {
+        void setWidth (int w) {
             width = w;
         }
         void setHeight(int h) {
             height = h;
         }
 
-        int getWidth() {
+        int getWidth () {
             return this->width;
         }
         int getHeight() {
@@ -57,7 +57,12 @@ class Image {
             mPixels[x][y] = pixelValue;
         }
         int getPixelAsInt(int x, int y) {
-            return ( (int) mPixels[x][y] );
+            int aux = (int) mPixels[x][y];
+
+            if (aux > 255) aux = 255;
+            if (aux <  0 ) aux = 0;
+
+            return (aux);
         }
         float getPixelAsFloat(int x, int y) {
             return ( mPixels[x][y] );
